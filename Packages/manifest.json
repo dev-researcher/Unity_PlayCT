@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "com.unity.inputsystem": "1.15.0",
+    "com.unity.xr.interaction.toolkit": "3.4.1",
+    "com.unity.xr.management": "4.5.4",
+    "com.unity.xr.openxr": "1.16.1",
+    "com.unity.modules.androidjni": "1.0.0",
+    "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.imgui": "1.0.0",
+    "com.unity.modules.jsonserialize": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.subsystems": "1.0.0",
+    "com.unity.modules.ui": "1.0.0",
+    "com.unity.modules.xr": "1.0.0"
+  }
+}
