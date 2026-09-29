@@ -11,8 +11,11 @@ Unity project for Meta Quest 3 VR research (stationary interaction, no locomotio
 
 `Assets/Scripts/Research` is shared by every task.
 
-- `SessionManager` holds session ID, participant ID and condition. Set them in the inspector or in `session_config.json` inside `Application.persistentDataPath` (`{"participantId":"P012","condition":"A","hanoiDiskCount":4}`).
+- `SessionManager` holds session ID, participant ID and condition. Set them in the inspector or in `session_config.json` inside `Application.persistentDataPath` (`{"participantId":"P012","condition":"PreAdapted","hanoiDiskCount":4}`).
 - `EventLogger` appends one JSON object per line to `<persistentDataPath>/PlayCT/<sessionId>/events.jsonl`. Every line carries `session_id, participant_id, condition, task, event, timestamp_utc, t_session_s` followed by the task's own fields. Tasks implement no logging of their own; they send a `ResearchEvent` to the logger.
+- `ConditionManager` gives a typed view (`Static` or `PreAdapted`) of the SessionManager's condition text; the legacy value `baseline` is read as `Static`. Any other text is invalid and the experiment will not start.
+- `IExperimentTask` is what a task exposes to the experiment: `TaskId`, `StartTask(condition)`, `IsRunning`, `IsCompleted`, `Completed`, `EndTask(reason)`. `HanoiTask` implements it; a future task does the same and registers itself with `TaskOrchestrator` (inspector `tasks` list or `Register`).
+- `TaskOrchestrator` runs the task IDs in its `taskSequence` list (currently only `Hanoi`) one after another and logs `experiment_started`, `task_started`, `task_ended`, `task_skipped` and `experiment_ended` (task name `Experiment`) to the same `events.jsonl`. Sequence logic lives in the pure class `ExperimentSequencer`. In the Laboratory scene the orchestrator starts Hanoi, so `HanoiTask.beginOnStart` is off there.
 
 On Quest the folder is `/sdcard/Android/data/<package>/files/PlayCT/`.
 
@@ -28,7 +31,7 @@ The `Hanoi_Task` object in `Laboratory.unity` holds a wooden board with pegs `Or
 ## Tests
 
 - Unity Test Runner: `Assets/Tests/EditMode` (pure logic, log format, mesh geometry) and `Assets/Tests/PlayMode` (Laboratory scene driven through the task).
-- Without the Editor: `dotnet test Tools~/OffEngineTests` (.NET 8 SDK) runs the EditMode tests plus the real `HanoiTask`/`HanoiDisk`/`EventLogger` scripts on a small fake engine (46 tests). It complements, and does not replace, Play Mode.
+- Without the Editor: `dotnet test Tools~/OffEngineTests` (.NET 8 SDK) runs the EditMode tests plus the real `HanoiTask`/`HanoiDisk`/`EventLogger` scripts on a small fake engine (87 tests). It complements, and does not replace, Play Mode.
 
 ## Opening the project on a new machine
 

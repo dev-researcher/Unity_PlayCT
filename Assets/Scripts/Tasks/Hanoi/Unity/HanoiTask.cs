@@ -10,7 +10,7 @@ namespace PlayCT.Tasks.Hanoi
     /// <see cref="HanoiTrial"/> logic, animates disks into place or back to where they came from, and logs through the
     /// shared <see cref="EventLogger"/>. The participant sees no counters, timers, scores or messages.
     /// </summary>
-    public class HanoiTask : MonoBehaviour
+    public class HanoiTask : MonoBehaviour, IExperimentTask
     {
         [Header("Trial configuration")]
         [SerializeField, Range(HanoiState.MinDisks, HanoiState.MaxDisks)] int diskCount = 3;
@@ -51,6 +51,24 @@ namespace PlayCT.Tasks.Hanoi
 
         public event Action<HanoiTrial> TrialStarted;
         public event Action<HanoiSummary> TrialCompleted;
+
+        public string TaskId => HanoiTrial.TaskName;
+        public event Action<IExperimentTask> Completed;
+
+        /// <summary>Common task entry point: begins a trial. The condition does not change how Hanoi behaves.</summary>
+        public void StartTask(ExperimentCondition condition) => BeginTrial();
+
+        /// <summary>Common task exit point: ends a trial that is still running and releases any held disk.</summary>
+        public void EndTask(string reason)
+        {
+            if (trial == null) return;
+            trial.End(reason);
+            foreach (var disk in disks)
+            {
+                if (disk.IsHeld) disk.CancelSelection();
+            }
+            RefreshAccessibility();
+        }
 
         void Awake()
         {
@@ -194,6 +212,7 @@ namespace PlayCT.Tasks.Hanoi
             lastSummary = trial.BuildSummary();
             eventLogger.WriteJsonFile($"hanoi_trial_{trial.TrialIndex:D2}_summary.json", lastSummary.ToJson(session));
             TrialCompleted?.Invoke(lastSummary);
+            Completed?.Invoke(this);
         }
 
         void ReturnToCurrentSlot(HanoiDisk disk, float duration)
