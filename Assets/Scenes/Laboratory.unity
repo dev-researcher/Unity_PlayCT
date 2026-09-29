@@ -12013,9 +12013,11 @@ MonoBehaviour:
   taskSequence:
   - Hanoi
   - CuboRelaciones
+  - GabineteFormas
   tasks:
   - {fileID: 1497}
   - {fileID: 20012}
+  - {fileID: 20022}
   beginOnStart: 1
   session: {fileID: 1397}
   conditionManager: {fileID: 20003}
@@ -12104,6 +12106,84 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 78fdf7696850532e93ee2b98e7ae00ca, type: 2}
   - {fileID: 2100000, guid: d1169eddad935dc38c30e8d080d705e4, type: 2}
   - {fileID: 2100000, guid: d8b3ec43747552ed87bbf700697c246c, type: 2}
+--- !u!1 &20020
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 20021}
+  - component: {fileID: 20022}
+  - component: {fileID: 20023}
+  m_Layer: 0
+  m_Name: Gabinete_Task
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &20021
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20020}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0.62}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &20022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a31b6862fe8b5531ad03a21922309594, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trials: []
+  view: {fileID: 20023}
+  hideWhileActive:
+  - {fileID: 1495}
+  interTrialDelay: 1
+  rules:
+    captureRadius: 0.05
+    positionTolerance: 0.01
+    orientationTolerance: 10
+    maxTilt: 25
+    maxReleaseHeight: 0.08
+    rotationThreshold: 15
+  session: {fileID: 1397}
+  eventLogger: {fileID: 1400}
+--- !u!114 &20023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d4c5634ac035b1aa91a07b4d1c874f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  task: {fileID: 20022}
+  pieceMaterial: {fileID: 2100000, guid: 56ae343c30725468a0ebbfcb53e68acc, type: 2}
+  boardMaterial: {fileID: 2100000, guid: c03d3529220b51df97709c5a9537d8bd, type: 2}
+  pocketMaterial: {fileID: 2100000, guid: 78fdf7696850532e93ee2b98e7ae00ca, type: 2}
+  trayMaterial: {fileID: 2100000, guid: e2a90f3903cd5c3385ae0b9f45bd1ff4, type: 2}
+  seatDuration: 0.25
+  returnDuration: 0.3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -12114,3 +12194,4 @@ SceneRoots:
   - {fileID: 1402}
   - {fileID: 1496}
   - {fileID: 20011}
+  - {fileID: 20021}

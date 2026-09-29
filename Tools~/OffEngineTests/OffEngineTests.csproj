@@ -22,6 +22,9 @@
     <Compile Include="../../Assets/Scripts/Tasks/Cubo/Logic/*.cs" />
     <Compile Include="../../Assets/Scripts/Tasks/Cubo/Unity/ICuboView.cs" />
     <Compile Include="../../Assets/Scripts/Tasks/Cubo/Unity/CuboTask.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Gabinete/Logic/*.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Gabinete/Unity/IGabineteView.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Gabinete/Unity/GabineteTask.cs" />
     <Compile Include="../../Assets/Tests/EditMode/*.cs" />
     <PackageReference Include="NUnit" Version="3.14.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
