@@ -28,4 +28,13 @@ The `Hanoi_Task` object in `Laboratory.unity` holds a wooden board with pegs `Or
 ## Tests
 
 - Unity Test Runner: `Assets/Tests/EditMode` (pure logic, log format, mesh geometry) and `Assets/Tests/PlayMode` (Laboratory scene driven through the task).
-- Without the Editor: `dotnet test Tools~/OffEngineTests` runs the real `HanoiTask`/`HanoiDisk`/`EventLogger` scripts on a small fake engine. It complements, and does not replace, Play Mode.
+- Without the Editor: `dotnet test Tools~/OffEngineTests` (.NET 8 SDK) runs the EditMode tests plus the real `HanoiTask`/`HanoiDisk`/`EventLogger` scripts on a small fake engine (46 tests). It complements, and does not replace, Play Mode.
+
+## Opening the project on a new machine
+
+1. Install Unity Hub and Unity **6000.0.84f1** (the repository root is the Unity project folder) with the modules for your platform. For Quest builds add **Android Build Support** including OpenJDK and Android SDK & NDK Tools.
+2. Clone the repository and add the folder in Unity Hub. On first open Unity resolves `Packages/manifest.json`, creates `Library/` and `Packages/packages-lock.json` (commit the lock file after the first successful open), and may ask to import TextMeshPro essentials; accept.
+3. Open `Assets/Scenes/Laboratory.unity` and press Play. Without a headset the XR Origin does not move; use the XR Device Simulator or connect the Quest (Meta Horizon Link / Air Link) and enable OpenXR for the Standalone platform (Project Settings > XR Plug-in Management > PC tab > OpenXR + Oculus Touch Controller Profile).
+4. Quest build: switch platform to Android; OpenXR with Meta Quest Support and the Touch controller profiles is already configured for Android in `Assets/XR`.
+
+Status: this project was authored without a Unity Editor. It has not yet been opened, compiled by Unity, or run in Play Mode. The first open on a real machine is the first real validation.

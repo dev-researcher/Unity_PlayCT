@@ -18,7 +18,8 @@
     <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Unity/HanoiTask.cs" />
     <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Unity/HanoiDisk.cs" />
     <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Unity/HanoiPeg.cs" />
-    <Compile Include="../../Assets/Tests/EditMode/TestSupport.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Logic/RingMeshBuilder.cs" />
+    <Compile Include="../../Assets/Tests/EditMode/*.cs" />
     <PackageReference Include="NUnit" Version="3.14.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
