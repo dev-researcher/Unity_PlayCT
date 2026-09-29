@@ -54,3 +54,8 @@ crashlytics-build.properties
 # OS
 .DS_Store
 Thumbs.db
+
+# Off-engine verification project (Tools~ is skipped by Unity's asset pipeline)
+!/Tools~/**/*.csproj
+/Tools~/**/bin/
+/Tools~/**/obj/
