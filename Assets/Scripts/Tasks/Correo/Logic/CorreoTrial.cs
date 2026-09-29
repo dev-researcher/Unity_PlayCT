@@ -227,7 +227,7 @@ namespace PlayCT.Tasks.Correo
                 .Add("selected_packages", shipment.PackageIds)
                 .Add("selected_count", shipment.Packages.Count)
                 .Add("path_capacity", verdict.PathCapacity)
-                .Add("valid", verdict.Valid)
+                .Add("legal", verdict.Valid)
                 .Add("outcome", verdict.Reason)
                 .Add("rejection_category", verdict.Category)
                 .Add("shipment_number", State.ShipmentCount)
@@ -236,6 +236,32 @@ namespace PlayCT.Tasks.Correo
                 .Add("locations_after", State.Snapshot()));
             if (completed) EmitCompletion();
             return new CorreoOutcome(true, verdict.Valid, completed, verdict.Reason, verdict.Category, shipment);
+        }
+
+        /// <summary>
+        /// Returns the trial to its deterministic initial state: every package at A, no shipments, no selection, counters and
+        /// clock at zero. It is a researcher/test operation (the participant has no control that calls it) and is logged.
+        /// </summary>
+        public void Reset(string reason = "reset")
+        {
+            if (!begun) throw new InvalidOperationException("Trial has not begun.");
+            shipments.Clear();
+            actionSequence.Clear();
+            ResetSelection();
+            Array.Clear(arrivalTimes, 0, arrivalTimes.Length);
+            State = CorreoState.Initial;
+            attempts = invalid = rejectedCapacity = rejectedConstraint = rejectedPath = rejectedSelection = 0;
+            firstActionTime = null;
+            completionTime = null;
+            IsCompleted = false;
+            ended = false;
+            beginTime = clock.MonotonicSeconds;
+            sink.Log(NewEvent("trial_reset")
+                .Add("trial_index", TrialIndex)
+                .Add("reason", reason)
+                .Add("shipment_number", 0)
+                .Add("package_locations", State.Snapshot())
+                .Add("completion_status", "in_progress"));
         }
 
         /// <summary>Ends the trial if its duration has run out. Returns true when it was ended by the time limit.</summary>

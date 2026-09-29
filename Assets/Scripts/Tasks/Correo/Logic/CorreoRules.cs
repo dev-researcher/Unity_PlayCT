@@ -46,7 +46,7 @@ namespace PlayCT.Tasks.Correo
     {
         /// <summary>
         /// Checks a shipment in the order: path exists, packages selected and present at the source, capacity, package
-        /// restrictions (P1 and P3 apart), and finally the state that would result (P1 may not be left waiting in D; no
+        /// restrictions (P1 and P3 apart), and finally the state that would result (P1 may never be left waiting in D; no
         /// low-priority package reaches E before P1 has).
         /// </summary>
         public static ShipmentVerdict Evaluate(CorreoNetwork network, CorreoState state, CorreoShipment shipment)
@@ -65,11 +65,10 @@ namespace PlayCT.Tasks.Correo
             if (shipment.Contains(CorreoPackage.P1) && shipment.Contains(CorreoPackage.P3))
                 return Reject(RejectionReason.P1AndP3Together, RejectionCategory.Constraint, capacity);
 
-            // P1 may pass through D, but if it is already there the next shipment has to take it on.
-            if (state.IsAt(CorreoPackage.P1, Settlement.D) && !shipment.Contains(CorreoPackage.P1))
-                return Reject(RejectionReason.P1WaitingInD, RejectionCategory.Constraint, capacity);
-
             var after = state.Apply(shipment);
+            // No shipment runs on from D in the same action, so any shipment that ends with P1 in D leaves it waiting there.
+            if (after.IsAt(CorreoPackage.P1, Settlement.D))
+                return Reject(RejectionReason.P1WaitingInD, RejectionCategory.Constraint, capacity);
             if (!after.PrioritySatisfied)
                 return Reject(RejectionReason.PriorityViolation, RejectionCategory.Constraint, capacity);
 

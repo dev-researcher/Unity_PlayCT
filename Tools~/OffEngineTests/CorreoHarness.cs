@@ -325,7 +325,7 @@ namespace PlayCT.OffEngine
             StringAssert.Contains("\"selected_packages\":[\"P2\",\"P3\"]", line);
             StringAssert.Contains("\"selected_count\":2", line);
             StringAssert.Contains("\"path_capacity\":1", line);
-            StringAssert.Contains("\"valid\":false", line);
+            StringAssert.Contains("\"legal\":false", line);
             StringAssert.Contains("\"outcome\":\"capacity_exceeded\"", line);
             StringAssert.Contains("\"rejection_category\":\"capacity\"", line);
             StringAssert.Contains("\"locations_before\":\"P1:A,P2:A,P3:A\"", line);
@@ -415,6 +415,21 @@ namespace PlayCT.OffEngine
             Solve();
             Assert.IsTrue(correo.IsCompleted);
             Assert.IsTrue(File.Exists(Path.Combine(logger.CurrentSessionDirectory, "correo_trial_02_summary.json")));
+        }
+
+        [Test]
+        public void Restarting_BeginsTheProtocolAgainFromTheInitialState()
+        {
+            Build();
+            orchestrator.BeginExperiment();
+            Send(Settlement.A, Settlement.C, P1);
+
+            correo.StartTask(ExperimentCondition.Static);
+
+            Assert.AreEqual(1, correo.Trial.TrialIndex);
+            Assert.AreEqual("P1:A,P2:A,P3:A", correo.Trial.State.Snapshot());
+            Assert.AreEqual(0, correo.Trial.ShipmentAttempts);
+            Assert.AreEqual("P1:A,P2:A,P3:A", view.Shown.Snapshot());
         }
 
         [Test]

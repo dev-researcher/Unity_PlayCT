@@ -326,24 +326,37 @@ namespace PlayCT.Tests
         }
 
         [Test]
-        public void P1CannotWaitInD_TheNextShipmentHasToTakeItOn()
+        public void P1CannotWaitInD_AnyShipmentThatWouldLeaveItThereIsRefused()
         {
             var trial = Start();
             Ship(trial, Settlement.A, Settlement.B, P1);
-            Assert.IsTrue(Ship(trial, Settlement.B, Settlement.D, P1).Valid, "passing through D is fine");
             var before = trial.State;
 
-            var leaveWaiting = Ship(trial, Settlement.A, Settlement.B, P2);
+            var viaB = Ship(trial, Settlement.B, Settlement.D, P1);
 
-            Assert.IsFalse(leaveWaiting.Valid);
-            Assert.AreEqual("p1_waiting_in_d", leaveWaiting.Reason);
-            Assert.AreEqual("constraint", leaveWaiting.Category);
+            Assert.IsFalse(viaB.Valid);
+            Assert.AreEqual("p1_waiting_in_d", viaB.Reason);
+            Assert.AreEqual("constraint", viaB.Category);
             Assert.AreSame(before, trial.State);
-            Assert.AreEqual("P1:D,P2:A,P3:A", trial.State.Snapshot());
+            Assert.AreEqual("P1:B,P2:A,P3:A", trial.State.Snapshot());
 
-            Assert.AreEqual("p1_waiting_in_d", Ship(trial, Settlement.A, Settlement.C, P3).Reason);
-            Assert.IsTrue(Ship(trial, Settlement.D, Settlement.E, P1).Valid, "moving P1 on is accepted");
-            Assert.IsTrue(Ship(trial, Settlement.A, Settlement.B, P2).Valid, "and then the others can go");
+            var trial2 = Start();
+            Ship(trial2, Settlement.A, Settlement.C, P1);
+            Assert.AreEqual("p1_waiting_in_d", Ship(trial2, Settlement.C, Settlement.D, P1).Reason);
+            Assert.AreEqual("P1:C,P2:A,P3:A", trial2.State.Snapshot());
+            Assert.IsTrue(Ship(trial2, Settlement.C, Settlement.E, P1).Valid, "P1 still reaches E by way of C");
+        }
+
+        [Test]
+        public void P1CannotWaitInD_AlsoWhenItTravelsWithP2_AndOthersMayUseD()
+        {
+            var trial = Start();
+            Ship(trial, Settlement.A, Settlement.B, P1, P2);
+
+            Assert.AreEqual("p1_waiting_in_d", Ship(trial, Settlement.B, Settlement.D, P1, P2).Reason);
+            Assert.AreEqual("P1:B,P2:B,P3:A", trial.State.Snapshot());
+            Assert.IsTrue(Ship(trial, Settlement.B, Settlement.D, P2).Valid, "P2 may wait in D");
+            Assert.AreEqual(Settlement.D, trial.State.Location(P2));
         }
 
         [Test]
@@ -461,17 +474,15 @@ namespace PlayCT.Tests
         }
 
         [Test]
-        public void EveryReachableState_CanStillFinish_SoTheParticipantCanNeverGetStuck_AndFiveShipmentsIsTheFewest()
+        public void FromEveryReachableState_TheTaskCanStillBeFinished_ExceptWhenP1WasSentToB_AndFiveShipmentsIsTheFewest()
         {
             var network = CorreoNetwork.Standard;
-            var seen = new Dictionary<CorreoState, int>();
+            var depth = new Dictionary<CorreoState, int>();
             var queue = new Queue<CorreoState>();
-            seen[CorreoState.Initial] = 0;
+            var edges = new Dictionary<CorreoState, List<CorreoState>>();
+            depth[CorreoState.Initial] = 0;
             queue.Enqueue(CorreoState.Initial);
             var all = ShipmentsUpToCapacity(network).ToList();
-            var deadEnds = 0;
-            var shortest = int.MaxValue;
-            var graph = new Dictionary<CorreoState, List<CorreoState>>();
 
             while (queue.Count > 0)
             {
@@ -482,18 +493,31 @@ namespace PlayCT.Tests
                     if (!CorreoRules.Evaluate(network, state, shipment).Valid) continue;
                     var after = state.Apply(shipment);
                     next.Add(after);
-                    if (seen.ContainsKey(after)) continue;
-                    seen[after] = seen[state] + 1;
+                    if (depth.ContainsKey(after)) continue;
+                    depth[after] = depth[state] + 1;
                     queue.Enqueue(after);
                 }
-                graph[state] = next;
-                if (state.AllDelivered) shortest = Math.Min(shortest, seen[state]);
-                else if (next.Count == 0) deadEnds++;
+                edges[state] = next;
             }
 
-            Assert.AreEqual(0, deadEnds, "every unfinished state has a valid shipment (packages only move forward)");
-            Assert.AreEqual(5, shortest);
-            Assert.IsTrue(seen.Keys.All(s => s.PrioritySatisfied), "no reachable state breaks the priority constraint");
+            var canFinish = new HashSet<CorreoState>(depth.Keys.Where(s => s.AllDelivered));
+            bool changed;
+            do
+            {
+                changed = false;
+                foreach (var state in depth.Keys)
+                    if (!canFinish.Contains(state) && edges[state].Any(canFinish.Contains))
+                    {
+                        canFinish.Add(state);
+                        changed = true;
+                    }
+            } while (changed);
+
+            var stuck = depth.Keys.Where(s => !canFinish.Contains(s)).ToList();
+            Assert.IsTrue(stuck.All(s => s.IsAt(P1, Settlement.B)), "P1 cannot leave B (B>D would leave it waiting in D), the only unfinishable states");
+            Assert.IsTrue(depth.Keys.Where(s => !s.IsAt(P1, Settlement.B)).All(canFinish.Contains));
+            Assert.AreEqual(5, depth.Where(kv => kv.Key.AllDelivered).Min(kv => kv.Value));
+            Assert.IsTrue(depth.Keys.All(s => s.PrioritySatisfied), "no reachable state breaks the priority constraint");
         }
 
         static IEnumerable<CorreoShipment> ShipmentsUpToCapacity(CorreoNetwork network)
@@ -525,7 +549,7 @@ namespace PlayCT.Tests
             CollectionAssert.AreEqual(new[] { "P2", "P3" }, (IEnumerable<string>)F(e, "selected_packages"));
             Assert.AreEqual(2, F(e, "selected_count"));
             Assert.AreEqual(2, F(e, "path_capacity"));
-            Assert.AreEqual(false, F(e, "valid"));
+            Assert.AreEqual(false, F(e, "legal"));
             Assert.AreEqual("package_not_at_source", F(e, "outcome"));
             Assert.AreEqual("selection", F(e, "rejection_category"));
             Assert.AreEqual(1, F(e, "shipment_number"));
@@ -543,7 +567,7 @@ namespace PlayCT.Tests
             Ship(trial, Settlement.C, Settlement.E, P1);
             var e = sink.OfType("shipment_attempt").Last();
 
-            Assert.AreEqual(true, F(e, "valid"));
+            Assert.AreEqual(true, F(e, "legal"));
             Assert.IsNull(F(e, "rejection_category"));
             Assert.AreEqual("shipped", F(e, "outcome"));
             Assert.AreEqual(2, F(e, "shipment_number"));
@@ -708,6 +732,55 @@ namespace PlayCT.Tests
                 StringAssert.Contains($"\"{key}\":", json);
             StringAssert.Contains("\"final_locations\":\"P1:E,P2:E,P3:E\"", json);
             StringAssert.Contains("\"shipment_sequence\":[\"A>C:P1\",\"C>E:P1\",\"A>C:P2\",\"A>C:P3\",\"C>E:P2+P3\"]", json);
+        }
+
+        [Test]
+        public void Reset_ReturnsToTheDeterministicInitialState()
+        {
+            var trial = Start();
+            trial.TapSettlement(Settlement.A);
+            trial.TogglePackage(P2);
+            Ship(trial, Settlement.A, Settlement.C, P1);
+            Ship(trial, Settlement.A, Settlement.C, P2, P3);
+            Ship(trial, Settlement.A, Settlement.B, P2);
+            clock.Advance(7);
+
+            trial.Reset();
+
+            Assert.AreEqual(CorreoState.Initial, trial.State);
+            Assert.AreEqual("P1:A,P2:A,P3:A", trial.State.Snapshot());
+            Assert.AreEqual(0, trial.State.ShipmentCount);
+            Assert.AreEqual(0, trial.ShipmentAttempts);
+            Assert.AreEqual(0, trial.ValidShipments);
+            Assert.AreEqual(0, trial.InvalidShipments);
+            Assert.IsEmpty(trial.Shipments);
+            Assert.IsEmpty(trial.ActionSequence);
+            Assert.IsNull(trial.SelectedSource);
+            Assert.AreEqual(0, trial.SelectedPackages.Count);
+            Assert.IsTrue(trial.IsRunning);
+            var summary = trial.BuildSummary();
+            Assert.AreEqual(0, summary.ElapsedSeconds, 1e-9);
+            Assert.IsNull(summary.FirstActionLatencySeconds);
+            Assert.IsNull(summary.P1ArrivalShipment);
+            var reset = sink.OfType("trial_reset").Single();
+            Assert.AreEqual("P1:A,P2:A,P3:A", F(reset, "package_locations"));
+        }
+
+        [Test]
+        public void Reset_AfterCompletion_ReopensTheTrial_AndReplayingGivesTheSameFinalState()
+        {
+            var trial = Start();
+            Play(trial, Solution);
+            var firstFinal = trial.State;
+            Assert.IsTrue(trial.IsCompleted);
+
+            trial.Reset();
+            Assert.IsFalse(trial.IsCompleted);
+            Assert.AreEqual(CorreoState.Initial, trial.State);
+            Play(trial, Solution);
+
+            Assert.IsTrue(trial.IsCompleted);
+            Assert.AreEqual(firstFinal, trial.State);
         }
 
         [Test]
