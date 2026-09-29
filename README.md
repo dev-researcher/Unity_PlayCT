@@ -15,7 +15,7 @@ Unity project for Meta Quest 3 VR research (stationary interaction, no locomotio
 - `EventLogger` appends one JSON object per line to `<persistentDataPath>/PlayCT/<sessionId>/events.jsonl`. Every line carries `session_id, participant_id, condition, task, event, timestamp_utc, t_session_s` followed by the task's own fields. Tasks implement no logging of their own; they send a `ResearchEvent` to the logger.
 - `ConditionManager` gives a typed view (`Static` or `PreAdapted`) of the SessionManager's condition text; the legacy value `baseline` is read as `Static`. Any other text is invalid and the experiment will not start.
 - `IExperimentTask` is what a task exposes to the experiment: `TaskId`, `StartTask(condition)`, `IsRunning`, `IsCompleted`, `Completed`, `EndTask(reason)`. `HanoiTask` implements it; a future task does the same and registers itself with `TaskOrchestrator` (inspector `tasks` list or `Register`).
-- `TaskOrchestrator` runs the task IDs in its `taskSequence` list (currently only `Hanoi`) one after another and logs `experiment_started`, `task_started`, `task_ended`, `task_skipped` and `experiment_ended` (task name `Experiment`) to the same `events.jsonl`. Sequence logic lives in the pure class `ExperimentSequencer`. In the Laboratory scene the orchestrator starts Hanoi, so `HanoiTask.beginOnStart` is off there.
+- `TaskOrchestrator` runs the task IDs in its `taskSequence` list (in the Laboratory scene `Hanoi`, then `CuboRelaciones`) one after another and logs `experiment_started`, `task_started`, `task_ended`, `task_skipped` and `experiment_ended` (task name `Experiment`) to the same `events.jsonl`. Sequence logic lives in the pure class `ExperimentSequencer`. In the Laboratory scene the orchestrator starts Hanoi, so `HanoiTask.beginOnStart` is off there.
 
 On Quest the folder is `/sdcard/Android/data/<package>/files/PlayCT/`.
 
@@ -28,10 +28,19 @@ The `Hanoi_Task` object in `Laboratory.unity` holds a wooden board with pegs `Or
 - Events per trial: `trial_started`, `disk_grab`, `disk_release` (disk_id, source_peg, destination_peg, legal, outcome, move_number, resulting_state, completion_status), `trial_completed`, `trial_summary` (completion time, total moves, invalid attempts, efficiency = optimal / moves, move sequence, attempt sequence). A summary is also written as `hanoi_trial_NN_summary.json` next to the event log.
 - Completion is detected when every disk is on `Destino`; the task then locks and raises `HanoiTask.TrialCompleted`.
 
+## Cubo de Relaciones (`Assets/Scripts/Tasks/Cubo`)
+
+The `Cubo_Task` object in `Laboratory.unity` builds, when it runs, a 38 cm cube of 27 dark-oak cubies with six matte sticker colours (Up linen, Down ochre, Front sage, Back slate, Left clay, Right plum) in the middle of the table. It implements `IExperimentTask` (`TaskId` `CuboRelaciones`); the orchestrator starts it after Hanoi, and while it runs it switches off `Hanoi_Task` so the table is clear (restored when the task ends).
+
+- Interaction: one hand grips the cube by its body or edges to stabilize it (it never moves); the other hand grips the middle of a face and lets go. A short movement selects the face; a clear twist around the face centre asks for a quarter turn clockwise or counterclockwise as seen from outside. Only exact 90 degree turns of a face layer exist, so there is no free rotation. Turns that are not in the trial's allowed set, or attempted without the stabilizing hand, are refused: the cube does not move, the attempt is logged, and the participant continues. Nothing is displayed to the participant.
+- Logic (`Logic/`, no Unity types): `CubeState` (54 stickers, immutable, deterministic quarter turns), `CubeMove`, `CuboTrialConfig` (mini-task, initial state, goal, allowed rotations, duration), `CuboTrial` (rules, events, metrics), `CuboSummary`. A trial is configured through `CuboTrialSpec` entries (`CuboTask.trials` in the inspector); an empty list uses `CuboProtocol.Default()`.
+- Mini-tasks, none of which asks for a full solve: `cruz_clara` (form a single-colour cross on a face), `corregir_una_pieza` (undo one displaced layer using only three faces), `elegir_una_secuencia` (choose which allowed turns undo a three-turn change), `que_permanece` (after turning, touch the face whose nine stickers did not change). Each trial has an optional time limit that only ends the trial; no timer is shown.
+- Events (task `CuboRelaciones`): `trial_started`, `stabilizer_changed`, `face_selected`, `rotation` (selected_face, rotation_axis, rotation_direction, rotation_amount_deg, legal, outcome, move_number, previous_state, resulting_state), `face_answer`, `trial_completed`, `trial_summary`. A summary per trial is also written as `cubo_trial_NN_summary.json`. The condition is recorded in every event and summary and does not change the rules.
+
 ## Tests
 
 - Unity Test Runner: `Assets/Tests/EditMode` (pure logic, log format, mesh geometry) and `Assets/Tests/PlayMode` (Laboratory scene driven through the task).
-- Without the Editor: `dotnet test Tools~/OffEngineTests` (.NET 8 SDK) runs the EditMode tests plus the real `HanoiTask`/`HanoiDisk`/`EventLogger` scripts on a small fake engine (87 tests). It complements, and does not replace, Play Mode.
+- Without the Editor: `dotnet test Tools~/OffEngineTests` (.NET 8 SDK) runs the EditMode tests plus the real `HanoiTask`/`HanoiDisk`/`CuboTask`/`TaskOrchestrator`/`EventLogger` scripts on a small fake engine (155 tests). It complements, and does not replace, Play Mode.
 
 ## Opening the project on a new machine
 
