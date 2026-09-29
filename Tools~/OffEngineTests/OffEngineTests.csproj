@@ -12,9 +12,15 @@
     <Compile Include="*.cs" />
     <Compile Include="../../Assets/Scripts/Research/Core/*.cs" />
     <Compile Include="../../Assets/Scripts/Research/Unity/*.cs" />
+    <Compile Include="../../Assets/Scripts/Research/Data/Core/*.cs" />
+    <Compile Include="../../Assets/Scripts/Research/Data/Unity/SessionDataExporter.cs" />
+    <Compile Include="../../Assets/Scripts/Research/Guide/Core/*.cs" />
+    <Compile Include="../../Assets/Scripts/Research/Guide/Unity/GuideDirector.cs" />
+    <Compile Include="../../Assets/Scripts/Research/Catalog/*.cs" />
     <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Logic/HanoiState.cs" />
     <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Logic/HanoiSummary.cs" />
     <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Logic/HanoiTrial.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Logic/HanoiResearchProfile.cs" />
     <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Unity/HanoiTask.cs" />
     <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Unity/HanoiDisk.cs" />
     <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Unity/HanoiPeg.cs" />
