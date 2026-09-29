@@ -12014,10 +12014,12 @@ MonoBehaviour:
   - Hanoi
   - CuboRelaciones
   - GabineteFormas
+  - ElCorreo
   tasks:
   - {fileID: 1497}
   - {fileID: 20012}
   - {fileID: 20022}
+  - {fileID: 20032}
   beginOnStart: 1
   session: {fileID: 1397}
   conditionManager: {fileID: 20003}
@@ -12184,6 +12186,84 @@ MonoBehaviour:
   trayMaterial: {fileID: 2100000, guid: e2a90f3903cd5c3385ae0b9f45bd1ff4, type: 2}
   seatDuration: 0.25
   returnDuration: 0.3
+--- !u!1 &20030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 20031}
+  - component: {fileID: 20032}
+  - component: {fileID: 20033}
+  m_Layer: 0
+  m_Name: Correo_Task
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &20031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20030}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0.62}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &20032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9accbb0dc534899ffbd3c3a7db7311b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trials: []
+  view: {fileID: 20033}
+  hideWhileActive:
+  - {fileID: 1495}
+  interTrialDelay: 1
+  session: {fileID: 1397}
+  eventLogger: {fileID: 1400}
+--- !u!114 &20033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2990445dde7e188aad00a0051336d8e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  task: {fileID: 20032}
+  boardMaterial: {fileID: 2100000, guid: c03d3529220b51df97709c5a9537d8bd, type: 2}
+  woodMaterial: {fileID: 2100000, guid: 56ae343c30725468a0ebbfcb53e68acc, type: 2}
+  pathMaterial: {fileID: 2100000, guid: e2a90f3903cd5c3385ae0b9f45bd1ff4, type: 2}
+  inkMaterial: {fileID: 2100000, guid: d55dd75add7d57fb9316c397471cb51c, type: 2}
+  parcelMaterial: {fileID: 2100000, guid: 661f20991cf75c628adc944f2ffd2016, type: 2}
+  priorityParcelMaterial: {fileID: 2100000, guid: d1169eddad935dc38c30e8d080d705e4, type: 2}
+  bandMaterial: {fileID: 2100000, guid: e2a90f3903cd5c3385ae0b9f45bd1ff4, type: 2}
+  sourceRingMaterial: {fileID: 2100000, guid: 8bffe800dc92584faea9dc0f2af2bd64, type: 2}
+  destinationRingMaterial: {fileID: 2100000, guid: d8b3ec43747552ed87bbf700697c246c, type: 2}
+  originPlaqueMaterial: {fileID: 2100000, guid: 18f5939cc9e4546abcde8b58d00f1800, type: 2}
+  destinationPlaqueMaterial: {fileID: 2100000, guid: 44c14c09eda65946840e8df609307c27, type: 2}
+  shipmentDuration: 0.8
+  textScale: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -12195,3 +12275,4 @@ SceneRoots:
   - {fileID: 1496}
   - {fileID: 20011}
   - {fileID: 20021}
+  - {fileID: 20031}
