@@ -93,4 +93,8 @@ Not verifiable without opening Unity (nothing here was opened in Unity): that Un
 3. Open `Assets/Scenes/Laboratory.unity` and press Play. Without a headset the XR Origin does not move; use the XR Device Simulator or connect the Quest (Meta Horizon Link / Air Link); OpenXR is already configured for the Standalone platform (see "PC / Quest Link" below).
 4. Quest build: switch platform to Android; OpenXR with Meta Quest Support and the Touch controller profiles is already configured for Android in `Assets/XR`.
 
-Status: this project was authored without a Unity Editor. It has not yet been opened, compiled by Unity, or run in Play Mode. The first open on a real machine is the first real validation.
+## Validation status
+
+- Verified: `dotnet test Tools~/OffEngineTests` (356 tests: pure logic, log and CSV formats, guide rules, XR asset file checks, and the real task, orchestrator and logger scripts on a fake engine) passes, and the runtime scripts compile against the UnityEngine assemblies.
+- Not verified (pending): the project has not been opened in the Unity Editor, compiled by Unity, run in Play Mode (the `Assets/Tests/PlayMode` tests have never run), rendered on a GPU or built and run on a Quest 3, because no licensed Unity Editor or headset was available. This includes the hand-written OpenXR Standalone (PC / Quest Link) assets, the Laboratory scene wiring, all XR interaction over controllers, and the tolerances and dimensions marked as placeholders above. `dotnet test` does not replace that validation; the first open on a real machine is the first real one.
+- Current limitations: four tasks exist (Hanoi, Cubo de Relaciones, Gabinete de Formas, El Correo) and run in that fixed order; there is no desktop (keyboard/mouse) input adapter, questionnaires, locomotion or real-time adaptation, and the condition (`Static` or `PreAdapted`) is recorded but does not change any task rule.
