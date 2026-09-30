@@ -31,6 +31,12 @@ namespace PlayCT.Research
 
         public event Action<ResearchEvent> EventLogged;
 
+        /// <summary>
+        /// When false nothing is written or raised: events and JSON files are dropped and no session is started. The application keeps this
+        /// off during free play so playing a game on its own leaves no research data, and turns it on for an experiment.
+        /// </summary>
+        public bool Recording { get; set; } = true;
+
         public string RootDirectoryOverride
         {
             get => rootDirectoryOverride;
@@ -45,12 +51,12 @@ namespace PlayCT.Research
 
         void Awake()
         {
-            ResolveSession();
+            if (session == null) session = FindFirstObjectByType<SessionManager>();
         }
 
         public void Log(ResearchEvent researchEvent)
         {
-            if (researchEvent == null) return;
+            if (researchEvent == null || !Recording) return;
             if (!EnsureWriter()) return;
             writer.Log(researchEvent);
             EventLogged?.Invoke(researchEvent);
@@ -58,7 +64,7 @@ namespace PlayCT.Research
 
         public void WriteJsonFile(string fileName, string json)
         {
-            if (!EnsureWriter()) return;
+            if (!Recording || !EnsureWriter()) return;
             File.WriteAllText(Path.Combine(CurrentSessionDirectory, fileName), json, new UTF8Encoding(false));
         }
 
