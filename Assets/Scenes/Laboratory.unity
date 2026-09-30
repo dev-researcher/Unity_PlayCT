@@ -342,7 +342,7 @@ MonoBehaviour:
   m_OriginBaseGameObject: {fileID: 300}
   m_CameraFloorOffsetObject: {fileID: 400}
   m_RequestedTrackingOriginMode: 2
-  m_CameraYOffset: 1.2
+  m_CameraYOffset: 1.36
 --- !u!1 &400
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,7 +368,7 @@ Transform:
   m_GameObject: {fileID: 400}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: 0}
+  m_LocalPosition: {x: 0, y: 1.36, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -404,7 +404,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 500}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.1305262, y: 0, z: 0, w: 0.9914449}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9869,7 +9869,7 @@ MonoBehaviour:
   participantId: P000
   condition: Static
   hanoiDiskCount: 0
-  startSessionOnAwake: 1
+  startSessionOnAwake: 0
   loadConfigFile: 1
 --- !u!1 &1398
 GameObject:
@@ -9934,7 +9934,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1496
 Transform:
   m_ObjectHideFlags: 0
@@ -12016,12 +12016,8 @@ MonoBehaviour:
   - CuboRelaciones
   - GabineteFormas
   - ElCorreo
-  tasks:
-  - {fileID: 1497}
-  - {fileID: 20012}
-  - {fileID: 20022}
-  - {fileID: 20032}
-  beginOnStart: 1
+  tasks: []
+  beginOnStart: 0
   session: {fileID: 1397}
   conditionManager: {fileID: 20003}
   eventLogger: {fileID: 1400}
@@ -12282,7 +12278,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &20041
 Transform:
   m_ObjectHideFlags: 0
@@ -12380,6 +12376,69 @@ MonoBehaviour:
   eventLogger: {fileID: 1400}
   exportWhenExperimentFinishes: 1
   exportEventsCsv: 1
+--- !u!1 &20060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 20061}
+  - component: {fileID: 20062}
+  m_Layer: 0
+  m_Name: Application
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &20061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20060}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &20062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7148a82b54365efebffdcefbeeaf9c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orchestrator: {fileID: 20006}
+  session: {fileID: 1397}
+  eventLogger: {fileID: 1400}
+  games:
+  - {fileID: 1497}
+  - {fileID: 20012}
+  - {fileID: 20022}
+  - {fileID: 20032}
+  guideRoot: {fileID: 20040}
+  xrOrigin: {fileID: 301}
+  trackingSpace: {fileID: 401}
+  head: {fileID: 501}
+  leftController: {fileID: 601}
+  rightController: {fileID: 701}
+  surfaceMaterial: {fileID: 2100000, guid: f0d769c20345579d8aa6e0de64b0236e, type: 2}
+  oakMaterial: {fileID: 2100000, guid: 56ae343c30725468a0ebbfcb53e68acc, type: 2}
+  panelDistance: 1.5
+  panelBelowEyes: 0.05
+  completionDelaySeconds: 0.8
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -12393,3 +12452,4 @@ SceneRoots:
   - {fileID: 20021}
   - {fileID: 20031}
   - {fileID: 20041}
+  - {fileID: 20061}

@@ -31,13 +31,16 @@ namespace PlayCT.Tests.PlayMode
             while (!load.isDone) yield return null;
             yield return null;
 
-            task = Object.FindFirstObjectByType<HanoiTask>();
+            // The application starts on the welcome screen with the games hidden; this test drives Hanoi directly, as the experiment does.
+            task = Object.FindFirstObjectByType<HanoiTask>(FindObjectsInactive.Include);
             logger = Object.FindFirstObjectByType<EventLogger>();
             session = Object.FindFirstObjectByType<SessionManager>();
             Assert.IsNotNull(task, "HanoiTask missing from the scene");
             Assert.IsNotNull(logger, "EventLogger missing from the scene");
             Assert.IsNotNull(session, "SessionManager missing from the scene");
 
+            task.gameObject.SetActive(true);
+            logger.Recording = true;
             logger.RootDirectoryOverride = tempRoot;
             session.BeginSession("P-TEST", "unit-test");
             task.Configure(3, "unit-test");
