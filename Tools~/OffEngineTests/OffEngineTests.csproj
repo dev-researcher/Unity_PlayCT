@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <IsPackable>false</IsPackable>
+    <Nullable>disable</Nullable>
+    <NoWarn>CS0649;CS0414;CS0108;CS0659;CS0660;CS0661</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="FakeUnity/*.cs" />
+    <Compile Include="*.cs" />
+    <Compile Include="../../Assets/Scripts/Research/Core/*.cs" />
+    <Compile Include="../../Assets/Scripts/Research/Unity/*.cs" />
+    <Compile Include="../../Assets/Scripts/Research/Data/Core/*.cs" />
+    <Compile Include="../../Assets/Scripts/Research/Data/Unity/SessionDataExporter.cs" />
+    <Compile Include="../../Assets/Scripts/Research/Guide/Core/*.cs" />
+    <Compile Include="../../Assets/Scripts/Research/Guide/Unity/GuideDirector.cs" />
+    <Compile Include="../../Assets/Scripts/Research/Catalog/*.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Logic/HanoiState.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Logic/HanoiSummary.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Logic/HanoiTrial.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Logic/HanoiResearchProfile.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Unity/HanoiTask.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Unity/HanoiDisk.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Unity/HanoiPeg.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Hanoi/Logic/RingMeshBuilder.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Cubo/Logic/*.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Cubo/Unity/ICuboView.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Cubo/Unity/CuboTask.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Gabinete/Logic/*.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Gabinete/Unity/IGabineteView.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Gabinete/Unity/GabineteTask.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Correo/Logic/*.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Correo/Unity/ICorreoView.cs" />
+    <Compile Include="../../Assets/Scripts/Tasks/Correo/Unity/CorreoTask.cs" />
+    <Compile Include="../../Assets/Tests/EditMode/*.cs" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+  </ItemGroup>
+</Project>
